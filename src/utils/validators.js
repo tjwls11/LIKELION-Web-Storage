@@ -53,7 +53,7 @@ export const validators = {
       if (!el) return false;
       const win = doc.defaultView || iframe.contentWindow;
       const style = win.getComputedStyle(el);
-      return parsePx(style.fontSize) >= 24;
+      return parsePx(style.fontSize) > 18;
     } catch {
       return false;
     }

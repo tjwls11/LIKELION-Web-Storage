@@ -15,8 +15,8 @@
   --text-2: #5d5145;
   --text-3: #8a7b6c;
   --text-4: #a59688;
-  --success: #2f8f5b;
-  --success-dim: #e7f4ec;
+  --success: #64748b;
+  --success-dim: #f1f5f9;
   --error: #c24d4d;
   --error-dim: #fbecec;
   --info: #436f9f;
@@ -133,7 +133,7 @@ h1, h2, h3 {
 .btn-success {
   background: var(--success-dim);
   color: var(--success);
-  border-color: #b9ddc7;
+  border-color: #cbd5e1;
 }
 
 .btn-lg {
@@ -361,7 +361,7 @@ h1, h2, h3 {
 }
 
 .header-step-btn.completed {
-  border-color: #b9ddc7;
+  border-color: #cbd5e1;
   background: var(--success-dim);
   color: var(--success);
 }
@@ -698,7 +698,7 @@ h1, h2, h3 {
 }
 
 .info-panel {
-  height: var(--info-panel-h);
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: var(--surface-1);
@@ -1085,7 +1085,7 @@ h1, h2, h3 {
 .auth-msg.success {
   background: var(--success-dim);
   color: var(--success);
-  border: 1px solid #b9ddc7;
+  border: 1px solid #cbd5e1;
 }
 
 .auth-msg.error {

@@ -29,9 +29,6 @@ export default function StepCompleteModal({
         )}
 
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose} type="button">
-            화면으로 돌아가기
-          </button>
           <button className="btn btn-primary btn-lg" onClick={onNext} type="button">
             {isLastStep ? '결과 보기' : '다음 단계'}
           </button>

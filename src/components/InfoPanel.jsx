@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
-import StorageViewer from './StorageViewer.jsx';
+import { useEffect, useState } from 'react'
+import StorageViewer from './StorageViewer.jsx'
 
 const RESULT_CONFIG = {
   pass: { text: '미션 통과', cls: 'pass' },
-  fail: { text: '아직 통과하지 못했습니다. 코드를 다시 확인해 보세요.', cls: 'fail' },
+  fail: {
+    text: '아직 통과하지 못했습니다. 코드를 다시 확인해 보세요.',
+    cls: 'fail',
+  },
   checking: { text: '검사 중', cls: 'checking' },
-};
+}
 
 export default function InfoPanel({
   currentStep,
@@ -18,25 +21,29 @@ export default function InfoPanel({
   missionFailCount,
   iframeRef,
 }) {
-  const isStorageStep = stepIndex === 2;
-  const hintUnlocked = missionFailCount >= 2;
-  const [activeTab, setActiveTab] = useState('mission');
-  const [showReferenceModal, setShowReferenceModal] = useState(false);
+  const isStorageStep = stepIndex === 2
+  const hintUnlocked = missionFailCount >= 2
+  const [activeTab, setActiveTab] = useState('mission')
+  const [showReferenceModal, setShowReferenceModal] = useState(false)
 
   const tabs = [
     { key: 'desc', label: '설명' },
-    { key: 'hint', label: hintUnlocked ? '힌트' : '힌트 잠김', disabled: !hintUnlocked },
+    {
+      key: 'hint',
+      label: hintUnlocked ? '힌트' : '힌트 잠김',
+      disabled: !hintUnlocked,
+    },
     { key: 'mission', label: '미션' },
     ...(isStorageStep ? [{ key: 'storage', label: 'Storage' }] : []),
     ...(isStorageStep ? [{ key: 'reference', label: '참고 자료' }] : []),
-  ];
+  ]
 
   useEffect(() => {
-    setActiveTab('mission');
-  }, [missionIndex, stepIndex]);
+    setActiveTab('mission')
+  }, [missionIndex, stepIndex])
 
-  const isLastMission = missionIndex === currentStep.missions.length - 1;
-  const canGoNext = missionResult === 'pass' && !isLastMission;
+  const isLastMission = missionIndex === currentStep.missions.length - 1
+  const canGoNext = missionResult === 'pass' && !isLastMission
 
   return (
     <div className="info-panel">
@@ -46,12 +53,12 @@ export default function InfoPanel({
             key={tab.key}
             className={`info-tab ${activeTab === tab.key ? 'active' : ''}`}
             onClick={() => {
-              if (tab.disabled) return;
+              if (tab.disabled) return
               if (tab.key === 'reference') {
-                setShowReferenceModal(true);
-                return;
+                setShowReferenceModal(true)
+                return
               }
-              setActiveTab(tab.key);
+              setActiveTab(tab.key)
             }}
             disabled={tab.disabled}
             type="button"
@@ -75,7 +82,11 @@ export default function InfoPanel({
                 >
                   새 창에서 보기
                 </a>
-                <button className="ref-close-btn" onClick={() => setShowReferenceModal(false)} type="button">
+                <button
+                  className="ref-close-btn"
+                  onClick={() => setShowReferenceModal(false)}
+                  type="button"
+                >
                   닫기
                 </button>
               </div>
@@ -90,7 +101,9 @@ export default function InfoPanel({
       )}
 
       <div className="info-content">
-        {activeTab === 'desc' && <p className="info-desc">{currentStep.description}</p>}
+        {activeTab === 'desc' && (
+          <p className="info-desc">{currentStep.description}</p>
+        )}
 
         {activeTab === 'hint' && hintUnlocked && (
           <div className="hint-box">
@@ -109,20 +122,32 @@ export default function InfoPanel({
               <button
                 className="btn btn-primary"
                 onClick={onValidate}
-                disabled={missionResult === 'checking' || missionResult === 'pass'}
+                disabled={
+                  missionResult === 'checking' || missionResult === 'pass'
+                }
                 type="button"
               >
-                {missionResult === 'checking' ? '검사 중...' : missionResult === 'pass' ? '통과 완료' : '제출'}
+                {missionResult === 'checking'
+                  ? '검사 중...'
+                  : missionResult === 'pass'
+                    ? '통과 완료'
+                    : '제출'}
               </button>
 
               {canGoNext && (
-                <button className="btn btn-success" onClick={onNextMission} type="button">
+                <button
+                  className="btn btn-success"
+                  onClick={onNextMission}
+                  type="button"
+                >
                   다음 미션
                 </button>
               )}
 
               {missionResult && (
-                <span className={`mission-result ${RESULT_CONFIG[missionResult].cls}`}>
+                <span
+                  className={`mission-result ${RESULT_CONFIG[missionResult].cls}`}
+                >
                   {missionResult === 'checking' ? (
                     <span>
                       {RESULT_CONFIG[missionResult].text}
@@ -138,15 +163,17 @@ export default function InfoPanel({
             {missionResult === 'fail' && (
               <div className="mission-help">
                 {hintUnlocked
-                  ? '힌트 탭이 열렸습니다. 필요하면 확인해 보세요.'
+                  ? '힌트 탭이 열렸습니다.'
                   : `현재 오답 ${missionFailCount}회입니다. 2회 이상 틀리면 힌트가 열립니다.`}
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'storage' && isStorageStep && <StorageViewer iframeRef={iframeRef} />}
+        {activeTab === 'storage' && isStorageStep && (
+          <StorageViewer iframeRef={iframeRef} />
+        )}
       </div>
     </div>
-  );
+  )
 }

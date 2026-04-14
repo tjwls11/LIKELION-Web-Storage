@@ -1,11 +1,11 @@
-import ppt002 from '../ppt/002.jpg';
-import ppt003 from '../ppt/003.jpg';
-import ppt004 from '../ppt/004.jpg';
-import ppt005 from '../ppt/005.jpg';
-import ppt006 from '../ppt/006.jpg';
-import ppt007 from '../ppt/007.jpg';
-import ppt008 from '../ppt/008.jpg';
-import ppt009 from '../ppt/009.jpg';
+import ppt002 from '../ppt/002.jpg'
+import ppt003 from '../ppt/003.jpg'
+import ppt004 from '../ppt/004.jpg'
+import ppt005 from '../ppt/005.jpg'
+import ppt006 from '../ppt/006.jpg'
+import ppt007 from '../ppt/007.jpg'
+import ppt008 from '../ppt/008.jpg'
+import ppt009 from '../ppt/009.jpg'
 
 export const steps = [
   {
@@ -77,12 +77,15 @@ export const steps = [
     missions: [
       {
         id: 's1m1',
-        title: '버튼 색을 주황 계열로 바꾸기',
-        description: '.btn의 배경색을 주황 느낌이 나도록 바꿔 보세요.',
+        title: '🍊버튼 색을 주황 계열로 바꾸기',
+        description: '🧡.btn의 배경색을 주황 느낌이 나도록 바꿔 보세요.',
         hint: `힌트:
 - 버튼을 꾸미는 선택자는 .btn 입니다.
 - 배경색을 바꾸는 속성을 찾아보세요.
-- 주황 느낌이면 정확한 코드가 같지 않아도 통과합니다.`,
+- 주황 느낌이면 정확한 코드가 같지 않아도 통과합니다.
+
+\`.btn\` 선택자를 먼저 찾고, 버튼의 배경색을 바꾸는 속성을 수정해 보세요.
+주황색 예시는 \`orange\`, \`#ff6b35\`, \`#ff8c00\` 같은 값이 가능합니다.`,
         validateFn: 'orangeButton',
       },
       {
@@ -253,21 +256,25 @@ button.addEventListener("click", function () {
       {
         id: 's2m1',
         title: '미션 버튼 클릭 반응 만들기',
-        description: '#myBtn 버튼을 누르면 #output의 문구가 바뀌도록 만들어 보세요.',
-        hint: `힌트:
-- 먼저 버튼과 결과 영역을 각각 선택하세요.
-- 클릭했을 때 실행되는 함수를 연결해야 합니다.
-- 위 예시의 흐름을 그대로 참고하되, 대상만 #myBtn / #output으로 바꿔 보세요.`,
+        description:
+          '#myBtn 버튼을 누르면 #output의 문구가 바뀌도록 만들어 보세요.',
+        hint: `위 예시 코드와 거의 같은 구조예요. 대상만 바꾸면 됩니다.
+
+- document.querySelector()로 #myBtn과 #output을 각각 선택하세요.
+- addEventListener("click", ...)으로 클릭 이벤트를 연결하세요.
+- 함수 안에서 output.textContent를 원하는 문구로 바꾸면 돼요.`,
         validateFn: 'buttonChangesText',
       },
       {
         id: 's2m2',
         title: '입력값을 화면에 실시간 출력하기',
-        description: '#myInput에 이름을 입력하면 #result에 바로 보이게 만들어 보세요.',
-        hint: `힌트:
-- 입력창은 클릭보다 입력 이벤트를 봐야 합니다.
-- input의 현재 값을 읽어서 다른 요소의 글자로 넣어 보세요.
-- 입력이 바뀔 때마다 다시 실행되도록 연결하는 것이 핵심입니다.`,
+        description:
+          '#myInput에 이름을 입력하면 #result에 바로 보이게 만들어 보세요.',
+        hint: `클릭이 아니라 글자를 입력할 때마다 실행되는 이벤트가 필요해요.
+
+- 이벤트 이름은 "click"이 아니라 "input"을 써 보세요.
+- 입력창의 현재 값은 .value로 읽을 수 있어요.
+- 읽은 값을 #result의 textContent에 넣으면 됩니다.`,
         validateFn: 'inputShowsValue',
       },
     ],
@@ -442,33 +449,40 @@ sessionStorage는 현재 탭이 끝나면 사라집니다.
       {
         id: 's3m1',
         title: 'localStorage에 값 저장하기',
-        description: '#saveLocal 버튼을 누르면 입력한 닉네임이 localStorage의 nickname으로 저장되게 만들어 보세요.',
-        hint: `힌트:
-- 저장 버튼과 입력창을 먼저 선택하세요.
-- 브라우저 저장소에 값을 넣는 메서드가 있습니다.
-- 저장한 뒤 화면의 localStorage 표시도 같이 바뀌게 해 보세요.`,
+        description:
+          '#saveLocal 버튼을 누르면 입력한 닉네임이 localStorage의 nickname으로 저장되게 만들어 보세요.',
+        hint: `localStorage에 값을 저장하는 메서드는 setItem("키", "값") 형태로 씁니다.
+
+- #saveLocal 버튼 클릭 시 실행되도록 이벤트를 연결하세요.
+- 입력창(#nicknameInput)의 값은 .value로 읽을 수 있어요.
+- localStorage.setItem("nickname", 입력값) 으로 저장하면 됩니다.
+- 저장 후 #localDisplay의 텍스트도 같이 업데이트해 주세요.`,
         validateFn: 'localStorageSave',
       },
       {
         id: 's3m2',
         title: '저장된 값 다시 불러오기',
-        description: '페이지가 열릴 때 localStorage에 있는 nickname을 읽어 #localDisplay에 보여 주세요.',
-        hint: `힌트:
-- 값 읽기는 저장과 반대 방향입니다.
-- 페이지가 로드되자마자 한 번 실행되어야 합니다.
-- localStorage에서 읽은 값을 화면 글자에 넣어 보세요.`,
+        description:
+          '페이지가 열릴 때 localStorage에 있는 nickname을 읽어 #localDisplay에 보여 주세요.',
+        hint: `localStorage에서 값을 읽는 메서드는 getItem("키") 형태로 씁니다.
+
+- 버튼 클릭 없이 페이지가 열리자마자 실행되어야 해요.
+- localStorage.getItem("nickname")으로 저장된 값을 읽으세요.
+- 읽은 값을 #localDisplay의 텍스트에 넣어 주면 됩니다.`,
         validateFn: 'localStorageLoad',
       },
       {
         id: 's3m3',
         title: 'sessionStorage 차이 체험하기',
-        description: '#saveSession 버튼을 누르면 입력한 닉네임이 sessionStorage에도 저장되게 만들어 보세요.',
-        hint: `힌트:
-- localStorage와 거의 같은 방식으로 사용할 수 있습니다.
-- 이번에는 sessionStorage를 사용하면 됩니다.
-- 저장 후 화면의 sessionStorage 표시도 함께 바뀌는지 확인해 보세요.`,
+        description:
+          '#saveSession 버튼을 누르면 입력한 닉네임이 sessionStorage에도 저장되게 만들어 보세요.',
+        hint: `미션 1과 구조가 거의 같아요.
+
+- localStorage 대신 sessionStorage를 사용하면 됩니다.
+- 버튼은 #saveSession, 표시 영역은 #sessionDisplay예요.
+- setItem 사용법은 localStorage와 동일합니다.`,
         validateFn: 'sessionStorageSave',
       },
     ],
   },
-];
+]
