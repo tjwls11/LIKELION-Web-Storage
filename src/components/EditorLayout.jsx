@@ -94,6 +94,10 @@ export default function EditorLayout({
   missionFailCount,
   currentUser,
   onLogout,
+  isAdminPreview,
+  onAdminBackToDashboard,
+  onAdminNavStep,
+  onAdminNavMission,
 }) {
   const mainRef = useRef(null);
   const rightRef = useRef(null);
@@ -102,6 +106,37 @@ export default function EditorLayout({
 
   return (
     <div className="editor-layout">
+      {isAdminPreview && (
+        <div className="admin-preview-bar">
+          <button className="btn btn-ghost btn-sm" onClick={onAdminBackToDashboard} type="button">
+            ← 대시보드
+          </button>
+          <div className="admin-preview-nav">
+            {allSteps.map((step, index) => (
+              <button
+                key={step.id}
+                className={`btn btn-sm ${index === stepIndex ? 'btn-primary' : 'btn-ghost'}`}
+                onClick={() => onAdminNavStep(index)}
+                type="button"
+              >
+                STEP {index + 1} {step.name}
+              </button>
+            ))}
+          </div>
+          <div className="admin-preview-nav">
+            {currentStep.missions.map((mission, index) => (
+              <button
+                key={mission.id}
+                className={`btn btn-sm ${index === missionIndex ? 'btn-secondary' : 'btn-ghost'}`}
+                onClick={() => onAdminNavMission(index)}
+                type="button"
+              >
+                문제 {index + 1}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <ProgressHeader
         allSteps={allSteps}
         stepIndex={stepIndex}

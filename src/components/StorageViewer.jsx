@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 
+const SYSTEM_KEYS = new Set([
+  'likelion_session',
+  'likelion_client_role',
+  'likelion_bonus_gate',
+]);
+
 function readStorage(storageObject) {
   const result = {};
 
   try {
     for (let index = 0; index < storageObject.length; index += 1) {
       const key = storageObject.key(index);
+      if (SYSTEM_KEYS.has(key)) continue;
       result[key] = storageObject.getItem(key);
     }
   } catch {

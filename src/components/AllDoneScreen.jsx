@@ -1,4 +1,5 @@
-import { buildRankedParticipants } from '../utils/scoring.js';
+import { buildRankedParticipants } from '../utils/scoring.js'
+import homeworkImg from '../ppt/웹스토리지-011.jpg'
 
 export default function AllDoneScreen({
   onRestart,
@@ -7,22 +8,17 @@ export default function AllDoneScreen({
   participants,
   submissions = [],
 }) {
-  const rankedParticipants = buildRankedParticipants(participants, submissions);
+  const rankedParticipants = buildRankedParticipants(participants, submissions)
 
   const cards = [
     { label: 'HTML & CSS', sub: '기초 구조와 스타일링 완료' },
     { label: 'JavaScript', sub: '이벤트와 상호작용 실습 완료' },
     { label: 'Web Storage', sub: '저장소 조작과 위험성 체험 완료' },
-  ];
+  ]
 
   return (
     <div className="all-done-screen">
       <h1 className="all-done-title">실습 완료</h1>
-      <p className="all-done-desc">
-        세 가지 단계의 미션을 모두 통과했습니다.
-        <br />
-        저장소는 편리하지만, 클라이언트 값을 신뢰하면 위험하다는 점까지 함께 확인한 상태입니다.
-      </p>
 
       <div className="all-done-cards">
         {cards.map((card) => (
@@ -33,8 +29,14 @@ export default function AllDoneScreen({
         ))}
       </div>
 
+      <img
+        src={homeworkImg}
+        alt="과제 안내"
+        style={{ width: '100%', maxWidth: 1000 }}
+      />
+
       {leaderboardVisible && rankedParticipants.length > 0 && (
-        <div className="leaderboard">
+        <div className="leaderboard" style={{ marginTop: 32 }}>
           <h2 className="leaderboard-title">참가자 점수판</h2>
           <div className="leaderboard-table">
             <div className="leaderboard-header leaderboard-simple-grid">
@@ -58,21 +60,16 @@ export default function AllDoneScreen({
               </div>
             ))}
           </div>
-          <p className="leaderboard-note">
-            문제별 정답 제출 순서로 점수를 계산합니다. 뒤에 정답자가 늘수록 먼저 맞힌 사람 점수도 함께 올라갑니다.
-          </p>
         </div>
       )}
 
       {!leaderboardVisible && (
         <div className="leaderboard leaderboard-hidden-note">
-          <p className="leaderboard-note">관리자가 현재 점수판을 숨겨 둔 상태입니다.</p>
+          <p className="leaderboard-note">
+            관리자가 현재 점수판을 숨겨 둔 상태입니다.
+          </p>
         </div>
       )}
-
-      <button className="btn btn-primary btn-lg" onClick={onRestart}>
-        다시 실습하기
-      </button>
     </div>
-  );
+  )
 }

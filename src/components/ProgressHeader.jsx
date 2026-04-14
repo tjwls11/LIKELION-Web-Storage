@@ -14,9 +14,7 @@ export default function ProgressHeader({
     <div className="progress-header">
       <div className="header-logo">
         <div className="header-logo-icon">🦁</div>
-        <div className="header-logo-text">
-          LIKELION <span>JS</span>
-        </div>
+        <div className="header-logo-text">LIKELION</div>
       </div>
 
       <div className="header-divider" />

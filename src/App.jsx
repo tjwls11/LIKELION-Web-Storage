@@ -324,8 +324,16 @@ export default function App() {
     return <AuthScreen onLogin={handleLogin} />;
   }
 
+  function handlePreviewStep(index) {
+    setStepIndex(index);
+    setMissionIndex(0);
+    setMissionResult(null);
+    setShowStepModal(false);
+    setScreen('editor');
+  }
+
   if (screen === 'admin') {
-    return <AdminDashboard steps={steps} runtime={runtime} onLogout={handleLogout} />;
+    return <AdminDashboard steps={steps} runtime={runtime} onLogout={handleLogout} onPreviewStep={handlePreviewStep} />;
   }
 
   if (screen === 'bonus') {
@@ -385,6 +393,18 @@ export default function App() {
       missionFailCount={missionFailCounts[currentMission.id] ?? 0}
       currentUser={currentUser?.username}
       onLogout={handleLogout}
+      isAdminPreview={currentUser?.role === 'operator'}
+      onAdminBackToDashboard={() => setScreen('admin')}
+      onAdminNavStep={(index) => {
+        setStepIndex(index);
+        setMissionIndex(0);
+        setMissionResult(null);
+        setShowStepModal(false);
+      }}
+      onAdminNavMission={(index) => {
+        setMissionIndex(index);
+        setMissionResult(null);
+      }}
     />
   );
 }

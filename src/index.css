@@ -311,6 +311,22 @@ h1, h2, h3 {
   color: var(--text-3);
 }
 
+.admin-preview-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #1e1e2e;
+  border-bottom: 2px solid var(--accent);
+  flex-wrap: wrap;
+}
+
+.admin-preview-nav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
 .editor-layout {
   height: 100vh;
   display: flex;
@@ -966,6 +982,24 @@ h1, h2, h3 {
 .all-done-card-sub {
   font-size: 12px;
   color: var(--text-3);
+}
+
+.all-done-slides {
+  width: min(100%, 860px);
+  align-self: stretch;
+  margin: 0 auto 32px;
+}
+
+.all-done-slide-stage {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.all-done-slide-img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .leaderboard {

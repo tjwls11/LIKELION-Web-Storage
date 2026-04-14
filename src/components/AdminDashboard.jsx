@@ -83,7 +83,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
   )
 }
 
-export default function AdminDashboard({ steps, runtime, onLogout }) {
+export default function AdminDashboard({ steps, runtime, onLogout, onPreviewStep }) {
   const [liveRuntime, setLiveRuntime] = useState(runtime)
   const [participants, setParticipants] = useState([])
   const [submissions, setSubmissions] = useState([])
@@ -203,6 +203,31 @@ export default function AdminDashboard({ steps, runtime, onLogout }) {
         </div>
 
         <div className="dashboard-grid">
+          <section className="dashboard-panel">
+            <div className="dashboard-panel-head">
+              <h2>단계 미리보기</h2>
+              <span className="text-muted">문제 풀이 없이 화면 탐색</span>
+            </div>
+
+            <div className="session-control-list">
+              {steps.map((step, index) => (
+                <div className="session-control-card" key={step.id}>
+                  <div>
+                    <div className="slide-preview-label">STEP {index + 1}</div>
+                    <div className="slide-preview-title">{step.name}</div>
+                  </div>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => onPreviewStep(index)}
+                    type="button"
+                  >
+                    미리보기
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+
           <section className="dashboard-panel">
             <div className="dashboard-panel-head">
               <h2>세션 시작 제어</h2>
