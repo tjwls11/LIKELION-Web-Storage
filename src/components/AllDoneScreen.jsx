@@ -37,7 +37,7 @@ export default function AllDoneScreen({
 
       {leaderboardVisible && rankedParticipants.length > 0 && (
         <div className="leaderboard" style={{ marginTop: 32 }}>
-          <h2 className="leaderboard-title">참가자 점수판</h2>
+          <h2 className="leaderboard-title">점수판</h2>
           <div className="leaderboard-table">
             <div className="leaderboard-header leaderboard-simple-grid">
               <span>순위</span>
