@@ -66,7 +66,7 @@ export default function App() {
   const totalMissions = steps.reduce((count, step) => count + step.missions.length, 0);
   const doneMissions =
     completedSteps.reduce((count, completedStepIndex) => count + steps[completedStepIndex].missions.length, 0) +
-    (missionResult === 'pass' && missionIndex === currentStep.missions.length - 1 ? missionIndex + 1 : missionIndex);
+    (missionResult === 'pass' ? missionIndex + 1 : missionIndex);
 
   function restoreProgress(userState) {
     const solvedMissionIds = Array.isArray(userState?.solvedMissionIds) ? userState.solvedMissionIds : [];
