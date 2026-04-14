@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 교육용 실습 프로젝트 규칙:
+    // 인증 없이 브라우저에서 users, runtime, submissions, bonusEntries를
+    // 읽고 쓸 수 있어야 현재 데모 흐름이 동작합니다.
+    // 실제 서비스에서는 이렇게 열어두면 안 됩니다.
+    match /users/{document=**} {
+      allow read, write: if true;
+    }
+
+    match /runtime/{document=**} {
+      allow read, write: if true;
+    }
+
+    match /submissions/{document=**} {
+      allow read, write: if true;
+    }
+
+    match /bonusEntries/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
