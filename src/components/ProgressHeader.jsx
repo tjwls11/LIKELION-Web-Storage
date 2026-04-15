@@ -6,6 +6,7 @@ export default function ProgressHeader({
   completedSteps,
   currentUser,
   onLogout,
+  onRestart,
 }) {
   const progressPct =
     totalMissions === 0 ? 0 : Math.round((doneMissions / totalMissions) * 100)
@@ -51,6 +52,9 @@ export default function ProgressHeader({
         {currentUser && (
           <div className="header-user">
             <span className="header-username">{currentUser}</span>
+            <button className="header-logout" onClick={onRestart}>
+              다시하기
+            </button>
             <button className="header-logout" onClick={onLogout}>
               로그아웃
             </button>

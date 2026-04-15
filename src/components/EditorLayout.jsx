@@ -94,6 +94,7 @@ export default function EditorLayout({
   missionFailCount,
   currentUser,
   onLogout,
+  onRestart,
   isAdminPreview,
   onAdminBackToDashboard,
   onAdminNavStep,
@@ -145,6 +146,7 @@ export default function EditorLayout({
         completedSteps={completedSteps}
         currentUser={currentUser}
         onLogout={onLogout}
+        onRestart={onRestart}
       />
 
       <MissionBar currentMission={currentMission} currentStep={currentStep} missionIndex={missionIndex} />

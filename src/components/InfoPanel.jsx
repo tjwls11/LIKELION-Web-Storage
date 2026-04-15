@@ -18,21 +18,15 @@ export default function InfoPanel({
   onNextMission,
   stepIndex,
   missionIndex,
-  missionFailCount,
   iframeRef,
 }) {
-  const isStorageStep = stepIndex === 2
-  const hintUnlocked = missionFailCount >= 2
+  const isStorageStep = stepIndex === 0
   const [activeTab, setActiveTab] = useState('mission')
   const [showReferenceModal, setShowReferenceModal] = useState(false)
 
   const tabs = [
     { key: 'desc', label: '설명' },
-    {
-      key: 'hint',
-      label: hintUnlocked ? '힌트' : '힌트 잠김',
-      disabled: !hintUnlocked,
-    },
+    { key: 'hint', label: '힌트' },
     { key: 'mission', label: '미션' },
     ...(isStorageStep ? [{ key: 'storage', label: 'Storage' }] : []),
     ...(isStorageStep ? [{ key: 'reference', label: '참고 자료' }] : []),
@@ -105,9 +99,18 @@ export default function InfoPanel({
           <p className="info-desc">{currentStep.description}</p>
         )}
 
-        {activeTab === 'hint' && hintUnlocked && (
+        {activeTab === 'hint' && (
           <div className="hint-box">
             <pre className="hint-pre">{currentMission.hint}</pre>
+          </div>
+        )}
+
+        {activeTab === 'storage' && isStorageStep && (
+          <div>
+            <p className="hint-f12-tip">
+              F12(검사) → Application 탭에서 스토리지 값을 확인하면서 해보세요.
+            </p>
+            <StorageViewer iframeRef={iframeRef} />
           </div>
         )}
 
@@ -162,17 +165,12 @@ export default function InfoPanel({
 
             {missionResult === 'fail' && (
               <div className="mission-help">
-                {hintUnlocked
-                  ? '힌트 탭이 열렸습니다.'
-                  : `현재 오답 ${missionFailCount}회입니다. 2회 이상 틀리면 힌트가 열립니다.`}
+                힌트 탭을 참고해보세요.
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'storage' && isStorageStep && (
-          <StorageViewer iframeRef={iframeRef} />
-        )}
       </div>
     </div>
   )

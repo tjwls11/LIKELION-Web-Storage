@@ -275,10 +275,36 @@ export default function App() {
     }
   }
 
+  async function handleRestart() {
+    if (!currentUser) return;
+    const confirmed = window.confirm('처음부터 다시 시작할까요? 진행 기록이 초기화됩니다.');
+    if (!confirmed) return;
+
+    await updateParticipantStatus(currentUser.username, {
+      solvedMissionIds: [],
+      currentStep: 0,
+      currentMission: 0,
+      completedSteps: [],
+    });
+
+    setStepIndex(0);
+    setMissionIndex(0);
+    setCode(steps[0].initialCode);
+    setMissionResult(null);
+    setMissionFailCounts({});
+    setShowStepModal(false);
+    setCompletedSteps([]);
+  }
+
   function handleNextMission() {
     if (missionIndex >= currentStep.missions.length - 1) return;
 
-    setMissionIndex((currentValue) => currentValue + 1);
+    const nextIndex = missionIndex + 1;
+    const nextMission = currentStep.missions[nextIndex];
+    if (nextMission?.initialCode) {
+      setCode(nextMission.initialCode);
+    }
+    setMissionIndex(nextIndex);
     setMissionResult(null);
   }
 
@@ -353,6 +379,7 @@ export default function App() {
       missionFailCount={missionFailCounts[currentMission.id] ?? 0}
       currentUser={currentUser?.username}
       onLogout={handleLogout}
+      onRestart={handleRestart}
       isAdminPreview={currentUser?.role === 'operator'}
       onAdminBackToDashboard={() => setScreen('admin')}
       onAdminNavStep={(index) => {

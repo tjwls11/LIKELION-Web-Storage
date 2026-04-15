@@ -171,46 +171,164 @@ sessionStorage는 현재 탭이 끝나면 사라집니다.
   color: #333;
   font-weight: 700;
 }`,
-      js: `// 여기에서 Web Storage 동작을 직접 연결해 보세요.
+      js: `// 미션 1: 저장 버튼을 클릭하면 localStorage에 저장해요
+document.querySelector("#saveLocal").addEventListener("click", function() {
+  const nickname = document.querySelector("#nicknameInput").value;
+
+  // 여기에 localStorage에 저장하는 코드를 한 줄 써보세요
+
+
+  document.querySelector("#localDisplay").textContent = nickname;
+});
+
+// 미션 2: 페이지가 열릴 때 저장된 값을 불러와요
+const saved = localStorage.getItem("nickname");
+
+// 여기에 saved 값을 #localDisplay에 표시하는 코드를 한 줄 써보세요
+
+
+// 미션 3: sessionStorage 버튼도 연결해요
+document.querySelector("#saveSession").addEventListener("click", function() {
+  const nickname = document.querySelector("#nicknameInput").value;
+
+  // localStorage 대신 sessionStorage로 저장해보세요
+
+
+  document.querySelector("#sessionDisplay").textContent = nickname;
+});
+
+// 지우기 버튼 (완성된 코드)
+document.querySelector("#clearAll").addEventListener("click", function() {
+  localStorage.removeItem("nickname");
+  sessionStorage.removeItem("nickname");
+  document.querySelector("#localDisplay").textContent = "없음";
+  document.querySelector("#sessionDisplay").textContent = "없음";
+});
 `,
     },
     missions: [
       {
         id: 's3m1',
-        title: 'localStorage에 값 저장하기',
-        description:
-          '#saveLocal 버튼을 누르면 입력한 닉네임이 localStorage의 nickname으로 저장되게 만들어 보세요.',
-        hint: `localStorage에 값을 저장하는 메서드는 setItem("키", "값") 형태로 씁니다.
+        title: 'localStorage에 저장하기',
+        description: '저장 버튼을 누르면 닉네임이 localStorage에 저장되게 만들어 보세요.',
+        hint: `"여기에 localStorage에 저장하는 코드" 주석 바로 아래에 이 코드를 한 줄 추가하세요.
 
-- #saveLocal 버튼 클릭 시 실행되도록 이벤트를 연결하세요.
-- 입력창(#nicknameInput)의 값은 .value로 읽을 수 있어요.
-- localStorage.setItem("nickname", 입력값) 으로 저장하면 됩니다.
-- 저장 후 #localDisplay의 텍스트도 같이 업데이트해 주세요.`,
+localStorage.setItem("nickname", nickname);
+
+setItem("키", "값") 형태로 저장합니다.`,
         validateFn: 'localStorageSave',
       },
       {
         id: 's3m2',
-        title: '저장된 값 다시 불러오기',
-        description:
-          '페이지가 열릴 때 localStorage에 있는 nickname을 읽어 #localDisplay에 보여 주세요.',
-        hint: `localStorage에서 값을 읽는 메서드는 getItem("키") 형태로 씁니다.
+        title: '저장된 값 불러오기',
+        description: '페이지가 열릴 때 localStorage에서 닉네임을 읽어 화면에 표시해 보세요.',
+        hint: `"여기에 saved 값을 #localDisplay에" 주석 바로 아래에 이 코드를 한 줄 추가하세요.
 
-- 버튼 클릭 없이 페이지가 열리자마자 실행되어야 해요.
-- localStorage.getItem("nickname")으로 저장된 값을 읽으세요.
-- 읽은 값을 #localDisplay의 텍스트에 넣어 주면 됩니다.`,
+document.querySelector("#localDisplay").textContent = saved;
+
+먼저 미션 1에서 닉네임을 저장한 뒤 실행해야 값이 보입니다.`,
         validateFn: 'localStorageLoad',
       },
       {
         id: 's3m3',
-        title: 'sessionStorage 차이 체험하기',
-        description:
-          '#saveSession 버튼을 누르면 입력한 닉네임이 sessionStorage에도 저장되게 만들어 보세요.',
-        hint: `미션 1과 구조가 거의 같아요.
+        title: 'sessionStorage로도 저장해보기',
+        description: 'sessionStorage 버튼을 누르면 sessionStorage에도 닉네임이 저장되게 만들어 보세요.',
+        hint: `"localStorage 대신 sessionStorage로" 주석 바로 아래에 이 코드를 한 줄 추가하세요.
 
-- localStorage 대신 sessionStorage를 사용하면 됩니다.
-- 버튼은 #saveSession, 표시 영역은 #sessionDisplay예요.
-- setItem 사용법은 localStorage와 동일합니다.`,
+sessionStorage.setItem("nickname", nickname);
+
+localStorage를 sessionStorage로만 바꾸면 됩니다.
+차이: 탭을 닫으면 sessionStorage는 사라지지만, localStorage는 남아 있습니다.`,
         validateFn: 'sessionStorageSave',
+      },
+      {
+        id: 's3m4',
+        title: '다크모드 설정 저장하기',
+        description: '버튼을 눌러 다크모드를 전환하고, 새로고침해도 설정이 유지되게 만들어 보세요.',
+        hint: `localStorage에 현재 테마를 저장하고, 페이지가 열릴 때 불러오면 됩니다.
+
+- #page 요소에 "dark" 클래스를 추가하면 다크모드가 적용됩니다.
+- classList.toggle("dark") 로 클래스를 켜고 끌 수 있습니다.
+- localStorage.setItem("theme", "dark") 로 저장하세요.
+- 페이지가 열릴 때 localStorage.getItem("theme") 으로 불러와 적용하세요.`,
+        validateFn: 'darkModeSave',
+        initialCode: {
+          html: `<div class="page" id="page">
+  <div class="card">
+    <h1 class="title">다크모드 설정</h1>
+    <p class="desc">버튼을 눌러 테마를 바꾸고, 새로고침해도 유지되게 만들어 보세요.</p>
+    <button class="btn" id="themeBtn">다크모드로 전환</button>
+  </div>
+</div>`,
+          css: `body {
+  margin: 0;
+}
+
+.page {
+  min-height: 100vh;
+  background: #f0f2f5;
+  padding: 40px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.page.dark {
+  background: #1a1a2e;
+  color: white;
+}
+
+.card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+}
+
+.page.dark .card {
+  background: #16213e;
+  color: white;
+}
+
+.title {
+  font-size: 22px;
+  margin: 0 0 12px 0;
+}
+
+.desc {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.page.dark .desc {
+  color: #aaa;
+}
+
+.btn {
+  background: #ff6b35;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+}`,
+          js: `// 1. #page와 #themeBtn 요소를 각각 가져오세요.
+
+
+// 2. localStorage에서 저장된 테마를 불러와서
+//    "dark"라면 #page에 "dark" 클래스를 추가하세요.
+
+
+// 3. #themeBtn을 클릭했을 때
+//    #page의 "dark" 클래스를 켜거나 끄세요. (toggle)
+//    그리고 현재 테마를 localStorage에 저장하세요.
+
+`,
+        },
       },
     ],
   },

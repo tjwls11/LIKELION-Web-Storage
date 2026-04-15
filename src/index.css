@@ -751,6 +751,16 @@ h1, h2, h3 {
   background: #fcfaf7;
 }
 
+.hint-f12-tip {
+  font-size: 12px;
+  color: #555;
+  background: #f0f2f5;
+  border-left: 3px solid #ff6b35;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin: 0 0 12px 0;
+}
+
 .hint-pre {
   font-size: 12px;
   color: var(--text-2);

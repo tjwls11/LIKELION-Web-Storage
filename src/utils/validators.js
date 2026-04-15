@@ -188,6 +188,27 @@ export const validators = {
     }
   },
 
+  // #themeBtn 클릭 후 localStorage에 테마가 저장되면 통과
+  async darkModeSave(iframe) {
+    try {
+      const doc = iframe.contentDocument;
+      if (!doc) return false;
+      const btn = doc.querySelector('#themeBtn');
+      if (!btn) return false;
+
+      const win = doc.defaultView || iframe.contentWindow;
+      win.localStorage.removeItem('theme');
+
+      btn.click();
+      await delay(300);
+
+      const saved = win.localStorage.getItem('theme');
+      return saved !== null && saved !== '';
+    } catch {
+      return false;
+    }
+  },
+
   // #saveSession 클릭 후 sessionStorage에 뭔가 저장되면 통과
   async sessionStorageSave(iframe) {
     try {
