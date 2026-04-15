@@ -4,7 +4,13 @@ const SYSTEM_KEYS = new Set([
   'likelion_session',
   'likelion_client_role',
   'likelion_bonus_gate',
+  'likelion_users',
+  'likelion_bonus_entries',
 ]);
+
+function isSystemKey(key) {
+  return SYSTEM_KEYS.has(key) || key.startsWith('likelion_user_state_');
+}
 
 function readStorage(storageObject) {
   const result = {};
@@ -12,7 +18,7 @@ function readStorage(storageObject) {
   try {
     for (let index = 0; index < storageObject.length; index += 1) {
       const key = storageObject.key(index);
-      if (SYSTEM_KEYS.has(key)) continue;
+      if (isSystemKey(key)) continue;
       result[key] = storageObject.getItem(key);
     }
   } catch {
