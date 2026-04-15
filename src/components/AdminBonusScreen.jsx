@@ -14,12 +14,6 @@ export default function AdminBonusScreen({
             <strong>{currentUser}</strong>
           </div>
           <div className="bonus-entry-row">
-            <span>진입 순위</span>
-            <strong>
-              {bonusEntry?.rank != null ? `${bonusEntry.rank}등` : '기록 확인 중'}
-            </strong>
-          </div>
-          <div className="bonus-entry-row">
             <span>진입 시각</span>
             <strong>
               {bonusEntry?.enteredAt
