@@ -1,121 +1,71 @@
-import { api } from './api.js'
+const USER_STATE_PREFIX = 'likelion_user_state_'
+const BONUS_ENTRIES_KEY = 'likelion_bonus_entries'
 
-const POLL_INTERVAL = 1500
-
-function normalizeRuntime(data = {}) {
-  const startedSteps = Array.isArray(data.startedSteps)
-    ? [...data.startedSteps]
-    : [false, false, false]
-  while (startedSteps.length < 3) startedSteps.push(false)
-  return {
-    missionStarted: startedSteps.some(Boolean),
-    startedSteps: startedSteps.slice(0, 3),
-    leaderboardVisible: data.leaderboardVisible ?? true,
-    bonusWinners: data.bonusWinners ?? [],
-    updatedAt: data.updatedAt ?? Date.now(),
-  }
-}
-
-/* ── 구독 헬퍼 (폴링) ── */
-
-function poll(fetcher, callback, interval = POLL_INTERVAL) {
-  let active = true
-
-  const run = async () => {
-    if (!active) return
-    try {
-      const data = await fetcher()
-      if (active) callback(data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  run()
-  const id = setInterval(run, interval)
-  return () => { active = false; clearInterval(id) }
-}
-
-/* ── 런타임 ── */
-
-export async function ensureRuntimeState() {
-  // 서버가 GET 시 자동으로 기본값 반환 — 별도 초기화 불필요
+function parseJSON(value) {
+  try { return value ? JSON.parse(value) : null } catch { return null }
 }
 
 export function subscribeRuntimeState(callback) {
-  return poll(
-    async () => normalizeRuntime(await api('/runtime', { method: 'GET' })),
-    callback,
-  )
+  callback({ missionStarted: true, startedSteps: [true], bonusWinners: [] })
+  return () => {}
 }
-
-export async function setStepSessionOpen(stepIndex, isOpen) {
-  const current = normalizeRuntime(await api('/runtime', { method: 'GET' }))
-  const startedSteps = [...current.startedSteps]
-  startedSteps[stepIndex] = isOpen
-  await api('/runtime', {
-    method: 'PUT',
-    body: { startedSteps, missionStarted: startedSteps.some(Boolean) },
-  })
-}
-
-/* ── 참가자 ── */
 
 export function subscribeParticipants(callback) {
-  return poll(
-    () => api('/participants', { method: 'GET' }),
-    callback,
-  )
+  callback([])
+  return () => {}
 }
 
+export function subscribeSubmissions(callback) {
+  callback([])
+  return () => {}
+}
+
+export function subscribeBonusEntries(callback) {
+  callback([])
+  return () => {}
+}
+
+export async function ensureRuntimeState() {}
+
 export async function getParticipantState(username) {
-  return api(`/users/${username}`, { method: 'GET' })
+  const key = USER_STATE_PREFIX + username
+  return parseJSON(localStorage.getItem(key)) ?? { solvedMissionIds: [] }
 }
 
 export async function updateParticipantStatus(username, patch) {
-  return api(`/users/${username}`, { method: 'PUT', body: patch })
+  const key = USER_STATE_PREFIX + username
+  const current = parseJSON(localStorage.getItem(key)) ?? {}
+  localStorage.setItem(key, JSON.stringify({ ...current, ...patch }))
 }
 
-export async function markParticipantOffline(username) {
-  if (!username) return
-  return updateParticipantStatus(username, { isOnline: false })
-}
+export async function markParticipantOffline() {}
 
-/* ── 제출 ── */
-
-export function subscribeSubmissions(callback) {
-  return poll(
-    () => api('/submissions', { method: 'GET' }),
-    callback,
-  )
-}
-
-export async function recordMissionSubmission({ username, missionId, answer, isCorrect, stepIndex, missionIndex }) {
-  return api('/submissions', {
-    body: { username, missionId, answer, isCorrect, stepIndex, missionIndex },
-  })
-}
-
-/* ── 보너스 ── */
-
-export function subscribeBonusEntries(callback) {
-  return poll(
-    () => api('/bonus', { method: 'GET' }),
-    callback,
-  )
+export async function recordMissionSubmission({ username, missionId, isCorrect }) {
+  if (!isCorrect) return
+  const key = USER_STATE_PREFIX + username
+  const current = parseJSON(localStorage.getItem(key)) ?? { solvedMissionIds: [] }
+  if (!Array.isArray(current.solvedMissionIds)) current.solvedMissionIds = []
+  if (!current.solvedMissionIds.includes(missionId)) {
+    current.solvedMissionIds.push(missionId)
+    localStorage.setItem(key, JSON.stringify(current))
+  }
 }
 
 export async function recordBonusEntry(username) {
-  return api(`/bonus/${username}`, { body: {} })
+  const entries = parseJSON(localStorage.getItem(BONUS_ENTRIES_KEY)) ?? []
+  const existing = entries.find(e => e.username === username)
+  if (existing) return existing
+
+  const entry = { username, enteredAt: Date.now(), rank: entries.length < 3 ? entries.length + 1 : null }
+  entries.push(entry)
+  localStorage.setItem(BONUS_ENTRIES_KEY, JSON.stringify(entries))
+  return entry
 }
 
-/* ── 초기화 ── */
+export async function setStepSessionOpen() {}
 
 export async function resetTrainingData() {
-  return api('/reset', { method: 'DELETE' })
+  Object.keys(localStorage)
+    .filter(k => k.startsWith(USER_STATE_PREFIX) || k === BONUS_ENTRIES_KEY)
+    .forEach(k => localStorage.removeItem(k))
 }
-
-/* ── 로컬 fallback (auth.js 호환용, 실제로는 미사용) ── */
-
-export function getLocalUser() { return null }
-export function saveLocalUser() {}
