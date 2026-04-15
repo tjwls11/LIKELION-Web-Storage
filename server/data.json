@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": "12",
+      "username": "12",
+      "password": "12",
+      "role": "participant",
+      "solvedMissionIds": [],
+      "isOnline": false,
+      "currentScreen": "editor",
+      "currentStep": 0,
+      "currentMission": 0,
+      "bonusEnteredAt": null,
+      "createdAt": 1776231259720,
+      "lastSeen": 1776231325867,
+      "completedSteps": [],
+      "lastSolvedAt": null
+    }
+  ],
+  "runtime": [
+    {
+      "id": "control",
+      "startedSteps": [
+        false
+      ],
+      "missionStarted": false,
+      "bonusWinners": [],
+      "updatedAt": 1776231339113
+    }
+  ],
+  "submissions": [],
+  "bonusEntries": []
+}

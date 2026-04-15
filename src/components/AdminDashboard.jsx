@@ -7,8 +7,6 @@ import {
   subscribeRuntimeState,
   subscribeSubmissions,
 } from '../utils/trainingStore.js'
-import { buildRankedParticipants } from '../utils/scoring.js'
-
 function formatTime(value) {
   if (!value) return '-'
   return new Date(value).toLocaleString()
@@ -98,11 +96,10 @@ export default function AdminDashboard({ steps, runtime, onLogout, onPreviewStep
   useEffect(() => subscribeSubmissions(setSubmissions), [])
   useEffect(() => subscribeBonusEntries(setBonusEntries), [])
 
-  const startedSteps = liveRuntime.startedSteps ?? [false, false, false]
-  const gatedSteps = steps.filter((_, index) => index === 2)
+  const startedSteps = liveRuntime.startedSteps ?? [false]
+  const gatedSteps = steps
   const winners = bonusEntries.slice(0, 3)
   const laterEntries = bonusEntries.slice(3)
-  const rankedParticipants = buildRankedParticipants(participants, submissions)
 
   const participantPageSize = 5
   const submissionPageSize = 5
@@ -268,38 +265,6 @@ export default function AdminDashboard({ steps, runtime, onLogout, onPreviewStep
                   </div>
                 )
               })}
-            </div>
-          </section>
-
-          <section className="dashboard-panel">
-            <div className="dashboard-panel-head">
-              <h2>실시간 점수판</h2>
-              <span className="text-muted">선착순 제출 기준으로 재계산</span>
-            </div>
-
-            <div className="dashboard-table">
-              <div className="dashboard-table-head dashboard-score-grid">
-                <span>참가자</span>
-                <span>점수</span>
-                <span>정답 수</span>
-                <span>현재 상태</span>
-              </div>
-
-              {rankedParticipants.map((participant) => (
-                <div
-                  className="dashboard-table-row dashboard-score-grid"
-                  key={participant.username}
-                >
-                  <span>{participant.username}</span>
-                  <strong>{participant.score ?? 0}</strong>
-                  <span>{participant.solvedCount ?? 0}</span>
-                  <span>{participant.currentScreen ?? 'unknown'}</span>
-                </div>
-              ))}
-
-              {rankedParticipants.length === 0 && (
-                <div className="dashboard-empty">등록된 참가자가 없습니다.</div>
-              )}
             </div>
           </section>
 

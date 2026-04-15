@@ -14,16 +14,13 @@ import {
   markParticipantOffline,
   recordBonusEntry,
   recordMissionSubmission,
-  subscribeParticipants,
   subscribeRuntimeState,
-  subscribeSubmissions,
   updateParticipantStatus,
 } from './utils/trainingStore.js';
 import AuthScreen from './components/AuthScreen.jsx';
 import EditorLayout from './components/EditorLayout.jsx';
 import AllDoneScreen from './components/AllDoneScreen.jsx';
 import AdminBonusScreen from './components/AdminBonusScreen.jsx';
-import StepIntroScreen from './components/StepIntroScreen.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 
 function serializeAnswer(code) {
@@ -35,12 +32,9 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [runtime, setRuntime] = useState({
     missionStarted: false,
-    startedSteps: [false, false, false],
+    startedSteps: [false],
     currentSlide: 0,
-    leaderboardVisible: true,
   });
-  const [participants, setParticipants] = useState([]);
-  const [submissions, setSubmissions] = useState([]);
   const [stepIndex, setStepIndex] = useState(0);
   const [missionIndex, setMissionIndex] = useState(0);
   const [code, setCode] = useState(steps[0].initialCode);
@@ -62,7 +56,7 @@ export default function App() {
 
   const currentStep = steps[stepIndex];
   const currentMission = currentStep.missions[missionIndex];
-  const hasPresentationGate = stepIndex === 2;
+  const hasPresentationGate = false;
   const totalMissions = steps.reduce((count, step) => count + step.missions.length, 0);
   const doneMissions =
     completedSteps.reduce((count, completedStepIndex) => count + steps[completedStepIndex].missions.length, 0) +
@@ -118,8 +112,6 @@ export default function App() {
   }, []);
 
   useEffect(() => subscribeRuntimeState(setRuntime), []);
-  useEffect(() => subscribeParticipants(setParticipants), []);
-  useEffect(() => subscribeSubmissions(setSubmissions), []);
 
   useEffect(() => {
     if (currentUser) return;
@@ -136,11 +128,8 @@ export default function App() {
       }
 
       const userState = await getParticipantState(storedSession.username);
-      const { nextStepIndex } = restoreProgress(userState);
-      const currentStepStarted = runtime.startedSteps?.[nextStepIndex] ?? false;
-      const nextScreen = nextStepIndex !== 2 || currentStepStarted ? 'editor' : 'waiting';
-
-      setScreen(nextScreen);
+      restoreProgress(userState);
+      setScreen('editor');
     };
 
     restoreSession();
@@ -219,13 +208,13 @@ export default function App() {
 
     await updateParticipantStatus(user.username, {
       isOnline: true,
-      currentScreen: nextStepIndex !== 2 || runtime.startedSteps?.[nextStepIndex] ? 'editor' : 'waiting',
+      currentScreen: 'editor',
       currentStep: nextStepIndex,
       currentMission: nextMissionIndex,
       completedSteps: nextCompletedSteps,
     });
 
-    setScreen(nextStepIndex !== 2 || runtime.startedSteps?.[nextStepIndex] ? 'editor' : 'waiting');
+    setScreen('editor');
   }
 
   async function handleLogout() {
@@ -309,16 +298,6 @@ export default function App() {
     setScreen('done');
   }
 
-  function handleRestart() {
-    setStepIndex(0);
-    setMissionIndex(0);
-    setCode(steps[0].initialCode);
-    setMissionResult(null);
-    setMissionFailCounts({});
-    setShowStepModal(false);
-    setCompletedSteps([]);
-    setScreen('editor');
-  }
 
   if (screen === 'auth') {
     return <AuthScreen onLogin={handleLogin} />;
@@ -347,28 +326,9 @@ export default function App() {
   }
 
   if (screen === 'done') {
-    return (
-      <AllDoneScreen
-        onRestart={handleRestart}
-        currentUser={currentUser?.username}
-        leaderboardVisible={runtime.leaderboardVisible}
-        participants={participants}
-        submissions={submissions}
-      />
-    );
+    return <AllDoneScreen />;
   }
 
-  if (screen === 'waiting') {
-    return (
-      <StepIntroScreen
-        currentStep={currentStep}
-        sessionOpen={runtime.startedSteps?.[stepIndex] ?? false}
-        currentUser={currentUser?.username}
-        onLogout={handleLogout}
-        onEnterSession={() => setScreen('editor')}
-      />
-    );
-  }
 
   return (
     <EditorLayout
