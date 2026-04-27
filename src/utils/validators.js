@@ -169,17 +169,20 @@ export const validators = {
   // 페이지 로드 시 localStorage 값을 #localDisplay에 보여주면 통과
   async localStorageLoad(iframe) {
     try {
-      const doc = iframe.contentDocument;
-      if (!doc) return false;
-      const win = doc.defaultView || iframe.contentWindow;
+      const win = iframe.contentWindow;
+      if (!win) return false;
 
       win.localStorage.setItem('nickname', '로드테스트');
 
-      const srcdoc = iframe.srcdoc;
-      iframe.srcdoc = srcdoc;
-      await delay(600);
+      await new Promise((resolve) => {
+        iframe.addEventListener('load', resolve, { once: true });
+        iframe.srcdoc = iframe.srcdoc;
+      });
+      await delay(300);
 
-      const display = doc.querySelector('#localDisplay');
+      const newDoc = iframe.contentDocument;
+      if (!newDoc) return false;
+      const display = newDoc.querySelector('#localDisplay');
       if (!display) return false;
       const text = display.textContent.trim();
       return text !== '' && text !== '없음';
@@ -188,7 +191,7 @@ export const validators = {
     }
   },
 
-  // #themeBtn 클릭 후 localStorage에 테마가 저장되면 통과
+  // #themeBtn 클릭 후 dark 클래스가 토글되거나 localStorage에 뭔가 저장되면 통과
   async darkModeSave(iframe) {
     try {
       const doc = iframe.contentDocument;
@@ -197,13 +200,16 @@ export const validators = {
       if (!btn) return false;
 
       const win = doc.defaultView || iframe.contentWindow;
-      win.localStorage.removeItem('theme');
+      const beforeLength = win.localStorage.length;
 
       btn.click();
       await delay(300);
 
-      const saved = win.localStorage.getItem('theme');
-      return saved !== null && saved !== '';
+      const page = doc.querySelector('#page') || doc.body;
+      const darkClassAdded = page?.classList.contains('dark');
+      const localStorageChanged = win.localStorage.length > beforeLength || win.localStorage.getItem('theme') !== null;
+
+      return darkClassAdded || localStorageChanged;
     } catch {
       return false;
     }

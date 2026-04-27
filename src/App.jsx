@@ -91,9 +91,14 @@ export default function App() {
       nextMissionIndex = steps[nextStepIndex].missions.length - 1;
     }
 
+    const nextMission = steps[nextStepIndex].missions[nextMissionIndex];
+    const codeToRestore = nextMission?.initialCode ?? steps[nextStepIndex].initialCode;
+
     setStepIndex(nextStepIndex);
     setMissionIndex(nextMissionIndex);
     setCompletedSteps(nextCompletedSteps);
+    setCode(codeToRestore);
+    setPreviewHTML(buildPreviewHTML(codeToRestore.html, codeToRestore.css, codeToRestore.js));
 
     return {
       nextStepIndex,
@@ -389,6 +394,10 @@ export default function App() {
         setShowStepModal(false);
       }}
       onAdminNavMission={(index) => {
+        const mission = currentStep.missions[index];
+        if (mission?.initialCode) {
+          setCode(mission.initialCode);
+        }
         setMissionIndex(index);
         setMissionResult(null);
       }}
